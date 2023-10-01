@@ -1,0 +1,6 @@
+
+@font-face {
+    font-family: 'ChakraPetch-Medium';
+    src: url("../fonts/chakraPatch/ChakraPetch-Bold.ttf") format('ttf'),
+         url("../fonts/chakraPatch/ChakraPetch-Medium.ttf") format('ttf');
+  }
