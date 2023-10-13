@@ -1,4 +1,4 @@
-const baseUrl = "http://127.0.0.1:8000/rawmaterial/"
+const baseUrl = "http://127.0.0.1:8000/rawmaterials/"
 
 export const getAllRawMaterial = async()=>{
     let url = baseUrl + "getall";

@@ -1,32 +1,36 @@
 import React, { useEffect, useState } from "react";
-import { useSpring, animated } from "react-spring";
-import {Box, Paper,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,TablePagination,Typography, Button,} from "@mui/material";
-import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
-import { getAllProducts,addProduct,deleteProduct,editProduct } from "../../api/productsapi";
 import { useNavigate } from "react-router-dom";
+import { deleteEmployee, getAllEmployees } from "../../api/userApi";
+import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
+import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
+import { useSpring, animated  } from "react-spring";
+import { Box } from "@mui/system";
 
 const AnimatedTableRow = animated(TableRow);
 
-const ProductsTable = () => {
-  const [products, setProducts] = useState([]);
+
+const EmployeesTable = () =>{
+  const [employee, setEmployee] = useState([]);
   const navigate = useNavigate()
   const [paginationState, setPaginationState] = useState({paginationModel: { page: 0, pageSize: 5 },});
   const fadeInProps = useSpring({ opacity: 1, from: { opacity: 0 } });
+
+
   useEffect(() => {fetchData();}, [paginationState]);
   const fetchData = async () => {
     try {
-      const data = await getAllProducts();
-      setProducts(data);} catch (error) {
+      const data = await getAllEmployees();
+      setEmployee(data);} catch (error) {
       console.error("Error fetching data:", error);
     }
-  };
+  }
 
   
   const handleDelete = async(id)=>{
-    let status= await deleteProduct(id);
+    let status= await deleteEmployee(id);
     if (status===200){
       fetchData()
-      alert('delete') }}
+       }}
 
 
 
@@ -46,37 +50,41 @@ const ProductsTable = () => {
   };
 
   const { page, pageSize } = paginationState.paginationModel;
-
   
-  const totalCount = products.length;
-  const slicedProducts = products.slice(page * pageSize, (page + 1) * pageSize);
+  const totalCount = employee ? employee.length : 0;   
+  const slicedEmployee = employee.slice(
+    page * pageSize,
+    (page + 1) * pageSize
+  );
   return (
-    <div style={fadeInProps}>
+    <animated.div style={fadeInProps}>
       <Box mt={4}>
         <Typography variant="h5" gutterBottom>
-          Products Table
+          RaW Material
         </Typography>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell>Id</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell align="right">Price</TableCell>
-                <TableCell align="right">Details</TableCell>
-                <TableCell align="right">Actions</TableCell>
+                <TableCell >First Name</TableCell>
+                <TableCell >Last Name</TableCell>
+                <TableCell >User Name</TableCell>
+								<TableCell >Email</TableCell>
+                <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {slicedProducts.map((product) => (
-                <AnimatedTableRow key={product.id}>
-                  <TableCell>{product.id}</TableCell>
-                  <TableCell>{product.name}</TableCell>
-                  <TableCell align="right">{product.price}</TableCell>
-                  <TableCell align="right">{product.details}</TableCell>
-                  <TableCell align="right">
-                  <Button onClick={() => handleDelete(product.id)}><DeleteIcon color="error" /></Button>
-                  <Button onClick={() => navigate('edit/'+product.id)}> <EditIcon color="primary" /> </Button>
+              {slicedEmployee.map((employee) => (
+                <AnimatedTableRow key={employee.id}>
+                  <TableCell>{employee.id}</TableCell>
+                  <TableCell >{employee.first_name}</TableCell>
+                  <TableCell >{employee.last_name}</TableCell>
+                  <TableCell >{employee.username}</TableCell>
+									<TableCell >{employee.email}</TableCell>
+                  <TableCell align="center">
+                  <Button onClick={() => handleDelete(employee.id)}><DeleteIcon color="error" /></Button>
+                  <Button onClick={() => navigate('edit/'+employee.id)}> <EditIcon color="primary" /> </Button>
                   </TableCell>
                 </AnimatedTableRow>
               ))}
@@ -93,8 +101,8 @@ const ProductsTable = () => {
           />
         </TableContainer>
       </Box>
-    </div>
+    </animated.div>
   );
 };
 
-export default ProductsTable;
+export default EmployeesTable;

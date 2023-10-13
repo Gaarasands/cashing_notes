@@ -4,15 +4,15 @@ import SignupForm from "../pages/signupform";
 import HomePage from "../pages/homePage";
 import UserPage from "../pages/user/userPage";
 import Navbar from "../components/homePage/navbar/navbar";
-import TeamHomePage from "../pages/sidebarPages/teamPage";
-import SettingsPage from "../pages/sidebarPages/settings";
+import SettingsPage from "../pages/settings/settings";
 import ProductsPage from "../pages/products/products";
-import DetailsPage from "../pages/sidebarPages/details";
 import RawMaterialPage from "../pages/rawmaterials/rawMaterials";
 import ProductsAddEditForm from "../pages/products/add_edit";
 import RawmaterialAddEditForm from "../pages/rawmaterials/add-edit";
 import Cashing from "../pages/cashing/cashing";
 import Tablespage from "../pages/tablespage";
+import SuppliersPage from "../pages/sidebarPages/Suppliers";
+import EmployeesPage from "../pages/sidebarPages/employees";
 
 
 const user = "/user/"
@@ -41,10 +41,6 @@ const authroute =(setThemeMode) =>{
   const userroute = createBrowserRouter(
     [
     {
-      path : user + "teampage",
-      element:<TeamHomePage/>
-    },
-    {
       path: user + "settings",
       element: <SettingsPage setThemeMode={setThemeMode} />,
     },
@@ -62,14 +58,6 @@ const authroute =(setThemeMode) =>{
     {
       path: user +"signin/",
       element: <LoginForm/>,      
-    },
-    {
-      path: user +"warehouse/",
-      element: <LoginForm/>,      
-    },
-    {
-      path : user + "details",
-      element:<DetailsPage/>
     },
     {
       path : user + "rawmaterial",
@@ -90,13 +78,23 @@ const authroute =(setThemeMode) =>{
     element :<RawmaterialAddEditForm />
    },
    {
+    path: user+"suppliers",
+    element : <SuppliersPage />
+   },
+   {
     path: user+"cashing",
     element : <Cashing />
    },
    {
     path: user+"tables",
     element : <Tablespage />
-   }
+   },
+   {
+    path: user+"employees",
+    element : <EmployeesPage />
+
+   },
+  
     
   
   

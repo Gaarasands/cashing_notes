@@ -6,10 +6,20 @@ import { Container, height } from "@mui/system";
 import { FcSettings } from "react-icons/fc";
 import '../../css/font.css';
 import getTheme from "../../theme/theme";
+import { FcClock } from "react-icons/fc";
+import TimeSettings from "./timesettings";
 
 const SettingsPage = ({ setThemeMode }) => {
   const [switchButtonState, setSwitchButtonState] = useState(false);
   const theme = getTheme(switchButtonState);
+  const [open,setOpen] = useState(false);
+
+  const handleOpen = () =>{
+    setOpen(true);
+  }
+  const handleClose = () =>{
+    setOpen(false)
+  }
 
 useEffect(() => {
   const themeModeState = localStorage.getItem("themeMode");
@@ -46,8 +56,8 @@ return (
       <Grid item xs={12} md={3} sx={{marginY:"20px"}}>
         <Button>
           <Card>
-            asdas
-            <CardContent>sfljfdvjkdbsvks</CardContent>
+            <FcClock size={40} />
+            <CardContent><Typography>Timing and sits</Typography> </CardContent>
           </Card>
         </Button>
       </Grid>
@@ -80,8 +90,7 @@ return (
           <Grid item xs={12} md={3} sx={{marginY:"20px"}}>
             <Button>
               <Card>
-                asdas
-                <CardContent>sfljfdvjkdbsvks</CardContent>
+                <CardContent>Timeing Cost</CardContent>
               </Card>
             </Button>
           </Grid>

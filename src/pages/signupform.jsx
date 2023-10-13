@@ -8,9 +8,25 @@
   import LoginIcon from '@mui/icons-material/Login';
   import * as Yup from "yup";
   import { Formik, Field, Form, ErrorMessage } from 'formik';
+  import { signup } from '../api/userApi';
 
   const SignupForm =()=>{
     const navigate = useNavigate();
+    const handleSubmit = async (values, { setSubmitting }) => {
+      try {
+        const responseStatus = await signup(values);
+        if (responseStatus === 201) {
+          console.log('Registration successful');
+          navigate("/user/signin");
+        } else {
+          console.log('Registration failed');
+        }
+      } catch (error) {
+        console.error(error);}  
+      setSubmitting(false);
+    };
+  
+    
     return(
       <Formik
       initialValues={{ username: '', email: '', password: '', confirmPassword: ''}}
@@ -29,12 +45,7 @@
           .oneOf([Yup.ref('password'), null], 'Passwords must match')
           .required('Required'),
       })}
-      onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
-          setSubmitting(false);
-        }, 400);
-      }}
+      onSubmit={handleSubmit}
     >
     {({ isSubmitting, errors, touched }) => (
       <Container component="main" maxWidth="lg" sx={{mt:5}}>

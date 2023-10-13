@@ -16,7 +16,6 @@ const LoginForm =()=>{
   const handleClick = async(data)=>{
     let status = await auth(data)
     if (status === 200){
-      console.log('hh')
       navigate('/user/home')
     }
   }     

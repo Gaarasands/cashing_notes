@@ -7,7 +7,7 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import AddIcon from '@mui/icons-material/Add';
 import InputAdornment from '@mui/material/InputAdornment';
-import { addProduct , editProduct ,getProductById} from "../../api/products";
+import { addProduct,editProduct,getProductById } from "../../api/productsapi";
 import { useNavigate,useParams } from "react-router-dom";
 import { Button } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
@@ -32,8 +32,8 @@ const ProductsAddEditForm = () => {
     formData.append("image", product.image);
 
     try {
-      let response = await addProduct(formData);
-      if (response.status === 201) {
+      let [status, response] = await addProduct(formData);
+      if (status === 201) {
         alert("Added");
         navigate("/user/products");
       }
@@ -50,8 +50,8 @@ const ProductsAddEditForm = () => {
     formData.append("image", product.image);
 
     try {
-      let response = await editProduct(params.id, formData);
-      if (response.status === 202) {
+      let [status, response] = await editProduct(params.id, formData);
+      if (status === 202) {
         alert("Updated");
         navigate("/user/products");
       }
@@ -60,17 +60,16 @@ const ProductsAddEditForm = () => {
     }
   };
 
-useEffect(() => {
-  getProducts();    
-}, []);
+  useEffect(() => {
+    getProducts();
+  }, []);
 
-
-const getProducts = async() =>{
-  let [status , data] = await getProductById(params.id)
-  if (status === 200){
-    setProduct(data)
-  }
-}
+  const getProducts = async () => {
+    let [status, data] = await getProductById(params.id);
+    if (status === 200) {
+      setProduct(data);
+    }
+  };
     return (
         <>
           <Card>

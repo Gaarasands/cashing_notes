@@ -28,23 +28,23 @@ const DrawerSlide = ({ open, onClose, username }) => {
       case 'Home':
         navigate(user + 'home');
         break;
+      case 'Cashing':
+        navigate(user + 'cashing')
+        break;
       case 'Products':
         navigate(user + 'products');
         break;
-      case 'RawMaterial':
+      case 'RawMaterials':
         navigate(user + 'rawmaterial');
         break;  
-      case 'WareHouse':
-        navigate(user + 'warehouse');
-        break;
       case 'Employees':
-        navigate(user + 'emplyees');
+        navigate(user + 'employees');
+        break;
+      case 'Suppliers':
+        navigate(user + 'suppliers');
         break;
       case 'Details':
         navigate(user + 'details');
-        break;
-      case 'Cashing':
-        navigate(user + 'cashing')
         break;
       case 'Settings':
         navigate(user + 'settings');
@@ -70,7 +70,7 @@ const DrawerSlide = ({ open, onClose, username }) => {
 
       <List sx={{ padding: 0 }}>
       
-        {[<Avatar sx={{ bgcolor: deepOrange[500] }}>T</Avatar>,'Home' , 'Products', 'RawMaterial', 'WareHouse', 'Emplyee', 'Cashing' ,'Settings'].map((text, index) => (
+        {[<Avatar sx={{ bgcolor: deepOrange[500] }}>T</Avatar>,'Home' , 'Cashing' , 'Products', 'RawMaterials', 'Employees', 'Suppliers', 'Settings'].map((text, index) => (
           <ListItem
             button 
             key={text}
