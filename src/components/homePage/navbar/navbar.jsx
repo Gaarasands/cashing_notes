@@ -82,7 +82,7 @@ const Navbar = (props) => {
               anchorEl={profileMenuOpen}
               open={Boolean(profileMenuOpen)}
               onClose={() => setProfileMenuOpen(null)}>
-              <Button onClick={console.log("Cashing")}>talal</Button>
+              <Button>talal</Button>
               
             </Menu>
               </div>

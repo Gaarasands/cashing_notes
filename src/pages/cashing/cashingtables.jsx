@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Box, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 
-const Tablespage = () => {
+const CashingTables = () => {
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
@@ -24,4 +24,4 @@ const Tablespage = () => {
   );
 };
 
-export default Tablespage;
+export default CashingTables;

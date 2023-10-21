@@ -10,9 +10,11 @@ import RawMaterialPage from "../pages/rawmaterials/rawMaterials";
 import ProductsAddEditForm from "../pages/products/add_edit";
 import RawmaterialAddEditForm from "../pages/rawmaterials/add-edit";
 import Cashing from "../pages/cashing/cashing";
-import Tablespage from "../pages/tablespage";
 import SuppliersPage from "../pages/sidebarPages/Suppliers";
 import EmployeesPage from "../pages/sidebarPages/employees";
+import CashingTables from "../pages/cashing/cashingtables";
+import ProductForm from "../tt";
+import TimeTracker from "../tt";
 
 
 const user = "/user/"
@@ -87,13 +89,21 @@ const authroute =(setThemeMode) =>{
    },
    {
     path: user+"tables",
-    element : <Tablespage />
+    element : <CashingTables />
    },
    {
     path: user+"employees",
     element : <EmployeesPage />
 
    },
+   {path:"test",
+   element:<ProductForm/>
+  },
+  {
+    path:"test2",
+    element:<TimeTracker />
+  }
+
   
     
   

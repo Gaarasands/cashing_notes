@@ -7,7 +7,9 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { getAllProducts } from "../../api/productsapi";
-import { Container } from "@mui/system";
+import moment from "moment/moment";
+
+
 
 const Cashing = () => {
   const [products, setProducts] = useState([]);
@@ -16,23 +18,65 @@ const Cashing = () => {
   const [numPeople, setNumPeople] = useState(1);
   const [buttonText, setButtonText] = useState("Start");
   const [buttonColor, setButtonColor] = useState("primary");
-  const [entryTime, setEntryTime] = useState('');
-  const [leavingTime, setLeavingTime] = useState('');
+  const [totalOrderCost, setTotalOrderCost] = useState(0);
+  const [entryTime, setEntryTime] = useState("");
+  const [leavingTime, setLeavingTime] = useState("");
+  const [calculatedTime, setCalculatedTime] = useState(null); // State for calculated time
 
+  {/*Timing funtions */}
+  const entryDate = new Date();
+  const [hour, minutes] = [entryDate.getHours(), entryDate.getMinutes()];
   const handleButtonClick = () => {
     if (buttonText === "Start") {
       setButtonText("End");
       setButtonColor("error");
-      const entryDate = new Date();
-      setEntryTime(entryDate.toLocaleTimeString());
-    } else {
-      setButtonText("Start");
-      setButtonColor("primary"); 
-      const leavingDate = new Date();
-      setLeavingTime(leavingDate.toLocaleTimeString());
+      const entryTime = `${hour}:${minutes}`;
+      setEntryTime(entryTime);
+      console.log(`Time: ${entryTime}`);
+    } 
+    else{
+      const leavingTime = `${hour}:${minutes}`;
+      setLeavingTime(leavingTime);
+      let minutesc = moment(leavingTime,"HH:mm").diff(moment(entryTime,"HH:mm"))/60000;
+      setCalculatedTime(minutesc)
+      console.log(minutesc)
     }
   };
 
+  
+
+
+{/* save data and import it from local storage */}
+    const saveDataToLocalStorage = () => {
+      const dataToSave = {
+        selectedProducts,entryTime,buttonText,buttonColor};
+      localStorage.setItem("cashingData", JSON.stringify(dataToSave));};
+      
+    const loadDataFromLocalStorage = () => {
+        const savedData = localStorage.getItem("cashingData");
+        if (savedData) {
+          const parsedData = JSON.parse(savedData);
+          setSelectedProducts(parsedData.selectedProducts || []);
+          setEntryTime(parsedData.entryTime || "")
+          setButtonColor(parsedData.buttonColor )
+          setButtonText(parsedData.buttonText || "end");
+        }
+      };   
+      useEffect(() => {
+        loadDataFromLocalStorage();
+        if (entryTime) {
+          setButtonText("End");
+          setButtonColor("error");
+        }
+      }, []);
+      useEffect(() => {
+        saveDataToLocalStorage();
+      }, [selectedProducts,entryTime]);   
+  
+  useEffect(() => {
+    calculateTotalCost();
+  }, [selectedProducts]);
+{/* import products by Api's */}
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -42,36 +86,36 @@ const Cashing = () => {
         console.error("Error fetching data:", error);
       }
     };
-
     fetchData();
   }, []);
-
+{/* Calculate Products Cost */}
+  const calculateTotalCost = () => {
+    let totalCost = 0;
+    for (const product of selectedProducts) {
+      totalCost += product.quantity * product.price;
+    }
+    setTotalOrderCost(totalCost);
+  };
+{/*send products to table */}
   const handleProductClick = (product) => {
     const existingProduct = selectedProducts.find(
-      (selectedProduct) => selectedProduct.name === product.name
-    );
+      (selectedProduct) => selectedProduct.name === product.name);
     if (existingProduct) {
       setSelectedProducts((prevSelectedProducts) =>
         prevSelectedProducts.map((selectedProduct) =>
           selectedProduct.name === product.name
             ? { ...selectedProduct, quantity: selectedProduct.quantity + quantity }
-            : selectedProduct
-        )
-      );
-    } else {
+            : selectedProduct)      );
+    }
+    else {
       setSelectedProducts((prevSelectedProducts) => [
         ...prevSelectedProducts,
         { ...product, quantity },
       ]);
     }
+    calculateTotalCost();
   };
 
-  const calculateCost = () => {
-    const totalOrderCost = selectedProducts.reduce(
-      (total, product) => total + product.quantity * product.price,
-      0
-    );
-  };
 
   return (
     <div>
@@ -79,7 +123,8 @@ const Cashing = () => {
       <Box sx={{mt:9}}>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={12}  md={12} lg={4}>
-          <Paper elevation={3} sx={{ boxShadow: 4, borderRadius: 4, p: 2 }}>
+        
+          <Paper elevation={3} sx={{ boxShadow: 4, borderRadius: 4, p: 2,height:"825px" }}>
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <Fab color="primary" aria-label="add">
                 <ArrowBackIcon />
@@ -101,25 +146,43 @@ const Cashing = () => {
             {/*part of enrtry and leaving time and bill details */}
             <Grid xs={12} sx={{ my: 2 }} height="#ccc">
               <Paper elevation={4} sx={{ m: 0, p: 2, boxShadow: 4, borderRadius: 4 }}>
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <div style={{ display: "flex", justifyContent: "center" }}>
-                    <Button variant="contained" color={buttonColor} onClick={handleButtonClick}>
-                      {buttonText}
-                    </Button>
-                  </div>        
+                <div style={{ display: "flex", flexDirection: "row" ,justifyContent:"space-between" }}>
                   <div style={{ flexDirection: "column" }}>
                     <Typography variant="h6" color="primary.main">
-                      Entry Time: {entryTime || "not started"}
-                    </Typography>
+                      Entry Time: {entryTime}
+                      </Typography>                   
                     <Typography variant="h6" color="primary.main">
-                      Leaving Time:{leavingTime || "they sit"}
+                      Leaving Time: {leavingTime}
+                      </Typography>
+                    <Typography variant="h6" color="primary.main">
+                      Time Cost per one: {calculatedTime}
                     </Typography>
                     <Typography variant="h6" color="primary.main">
                       Time Cost:
                     </Typography>
-                  </div>                 
+                  </div>
+                {/*Button for start and end */}
+                  <div style={{ display: "flex", justifyContent: "center" , flexDirection:"column"}}>
+                    <Button variant="contained" color={buttonColor} onClick={handleButtonClick}>
+                      {buttonText}
+                    </Button>
+                  </div>
+                              {/* Button Ending */}        
+                  {/* Orders Cost & Total */}
+                  <div style={{ flexDirection:"column", position:"end"}} id="divright">
+                  <Typography variant="h6" color="primary.main">
+                    Orders Cost :{totalOrderCost}
+                  </Typography>
+                  <Typography variant="h6" color="primary.main">
+                    Tax  / Discount :
+                  </Typography>
+                  <Typography variant="h6" color="primary.main">
+                    Total :
+                  </Typography>
+                  </div>                
                 </div>                
             </Paper>
+            
           </Grid>
             {/*end of bill part */}
             <Grid sm={12}md={12}>
@@ -174,11 +237,12 @@ const Cashing = () => {
             </TableContainer>
             </Grid>
           </Paper>
+          
         </Grid>
 
         {/* Second Part */}
         <Grid item xs={12} md={8}>
-          <Paper elevation={3} sx={{ borderRadius: "8px", p: 2 ,marginRight:2}}>
+          <Paper elevation={3} sx={{ borderRadius: "8px", p: 2 ,marginRight:2,height:"825px" }}>
             <Grid container spacing={2}>
               {products.map((product, index) => (
                 <Grid item xs={6} key={index}>
